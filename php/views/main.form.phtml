@@ -1,0 +1,106 @@
+
+<div class="container">
+	<div class="page-header">
+		<h1>Gestion des utilisateurs extérieurs</h1>
+	</div>	
+
+	<div class="row">
+		
+		<div class="span6 well">
+			<h2>Ajouter un utilisateur</h2>
+			<form method="post" action="index.php?action=addUser" class="form-horizontal"> 
+				<div class="control-group">
+					<label class="control-label" for="firstname" placeholder="Prénom">Prénom</label>
+					<div class="controls">
+						<input id="firstname" name="firstname" required type="text" value="<?php print($firstName); ?>" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="name" placeholder="Nom">Nom</label>
+					<div class="controls">
+						<input id="name" name="name" required type="text" value="<?php print($name); ?>" />
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button type="submit" class="btn btn-primary">Envoyer</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="span5">
+			<p class="notice">Uniquement des utilisateurs extérieurs.</p>
+		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="span6 well">
+			<h2>Réinitialiser un mot de passe</h2>
+			<form method="post" action="index.php?action=changeUserPassword" class="form-horizontal"> 
+				<div class="control-group">
+					<label class="control-label" for="firstname" placeholder="Utilisateur">Identifiant</label>
+					<div class="controls">
+						<input id="login" name="login" required type="text" autocomplete="off" />
+
+						<!-- bloc contenant les eventuelles suggestions -->
+						<div class="suggestionsBox Wel"  id="suggestions" style="display: none;"> 
+							
+							<!-- image de la fleche vers le haut -->
+							<div class="suggestionList" id="autoSuggestionsList">
+								<!-- liste contenant les suggestions -->
+								&nbsp;
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button type="submit" class="btn btn-danger">Envoyer</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="span5">
+			<p class="notice">Attention de ne modifier que le mot de passe d'utilisateur extérieur. En aucun cas celui d'un collègue ou d'un étudiant de SupAgro.</p>
+		</div>
+
+	</div>
+</div>
+
+<script src="js/jquery-1.8.2.min.js"></script>
+<script langage="javascript">
+
+//Source : http://blog.arnaud-k.fr/2009/04/28/tutorial-suggestions-auto-completion-en-ajax-avec-jquery-et-php/
+
+	function lookup(inputString) {
+		if(inputString.length <= 1) { // si le champs txte est vide
+			$('#suggestions').hide(); // on cache les suggestions
+		} else { // sinon
+			$.get("index.php", {action: "getUserList", login: ""+$("#login").val()+""}, function(data){ // on envoit la valeur du champ texte dans la variable post queryString au fichier ajax.php
+				if(data.length >0) {
+					$('#suggestions').show(); // si il y a un retour, on affiche la liste
+					$('#autoSuggestionsList').html(data); // et on remplit la liste des données
+				}
+			});
+		}
+	}
+	 
+	function fill(thisValue) { // remplir le champ texte si une suggestion est cliquée
+		$('#login').val(thisValue);
+		setTimeout("$('#suggestions').hide();", 200);
+	}
+	 
+	$(document).ready( function () { // lorsque la page est entierement chargée
+		$("#login").keyup( function() { // si on presse une touche du clavier en étant dans le champ texte qui a pour id inputString
+			lookup($(this).val()) 
+		});
+	 
+		$("#login").blur( function() { // si le champs texte perd le focus
+			fill() 
+		});
+	});
+
+
+</script>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+	
+	<head>
+		<meta charset="UTF-8" />
+		<link href="css/style.css" 			rel="stylesheet" />
+	</head>
+	
+	<body class="print"> 
+		<h1 class="print">Note aux nouveaux utilisateurs du réseau informatique de SupAgro Florac</h1>
+
+		<h2 class="print">A l'intention de <?php print($this->user->firstname." ".$this->user->name) ?></h2> 
+
+		<div id="acces" class="print">
+		<p>Paramètres de connexion : </p><br />
+		<table id="accestable">
+			<tr><td>Identifiant :  </td><td><b><?php print($this->user->login);    ?></b></td></tr>
+			<tr><td>Mot de passe : </td><td><b><?php print($this->user->password); ?></b></td></tr>
+		</table>
+		<br /><p>Ce droit d'accès est accordé à titre individuel et n'est pas cessible. <p>
+		</div>
+
+
+		<h2 class="print">Respect des droits de propriété et de confidentialité</h2>
+
+		<p>Les utilisateurs ne doivent en aucun cas tenter de lire, copier ou 
+			supprimer les fichiers d'un autre utilisateur.</p>
+
+		<p>Les utilisateurs doivent respecter les lois sur la propriété 
+			intellectuelle. Les informations (images, textes, sons, vidéos…) 
+			consultables sur Internet et sur l’Intranet local sont soumises aux 
+			règles de la propriété, leur copie est interdites sans autorisation 
+			écrite de l’auteur.</p>
+
+		<h2 class="print">Préservation de l'intégrité des systèmes informatiques</h2>
+
+		<p>L’utilisateur s’engage à prendre des précautions pour ne pas perturber le 
+			système informatique (Virus, mauvaises manipulation).</p>
+
+		<h2>Internet</h2>
+
+		<p>L'utilisation de logiciels de peer to peer, de jeux en ligne et la 
+			consultation de sites à caractère pornographique, raciste, violent… sont 
+			interdits.</p>
+
+		<h2 class="print">Imprimantes</h2>
+
+		<p>L'impression de documents sera réalisée en priorité en Recto-Verso. Les 
+			impressions doivent être réalisées avec modération.</p> 
+		<p>Les impressions couleur sont à demander auprès des membres du centre de 
+			ressource. Elles sont payantes.</p>
+
+	</body>
+</html>
