@@ -1,11 +1,9 @@
 #!/usr/bin/python 
 # -*- coding: utf-8 -*-
 
-import csv,sys,os
-import subprocess
+import sys,os
 
 #En entrée : prenom nom login motdepasse
-
 
 if len(sys.argv) != 5:
 	# Manque d'arguments : on sort.

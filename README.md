@@ -5,5 +5,5 @@ Php interface to add new users and change password.
 
 Add to /etc/sudoers
 
-%www-data ALL = NOPASSWD:/[Path_To]/py/ajouterUtilisateurs.php.py,NOPASSWD:/usr/sbin/smbldap-userlist,NOPASSWD:/[Path_To]/py/changeMotDePasse.php.py
+%www-data ALL = NOPASSWD:/usr/sbin/smbldap-usershow, NOPASSWD:/usr/sbin/smbldap-userlist, NOPASSWD:/[Path_To]/py/adduser.php.py, NOPASSWD:/[Path_To]/py/passwd.php.py
 

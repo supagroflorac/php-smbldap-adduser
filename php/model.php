@@ -7,9 +7,9 @@ class Users {
 	public $firstname;
 	public $password;
 	public $login;
-	public $set;
-	private $log;
-
+	public $ou;
+	public $set; //determine si l'utilisateur est completement initialisé
+	
 	/************************************************************************
 	 * Constructeur
 	 ***********************************************************************/
@@ -21,32 +21,54 @@ class Users {
 
 	}
 
+	// Créé les données utilisateur a partir du nom et prénom.
 	function newUser($firstname, $name){
 		$this->name = rmAccents($name);
 		$this->firstname = rmAccents($firstname);
+		$this->ou = "EXTERIEURS "; // Inutile pour eviter de laisser une variable vide.
 
-		$set = true;
+		$this->set = true;
 
 		// On génère le login
 		$this->genLogin();
 
 		// On génere le mot de passe
 		$this->genPassword();
-
-		
 	}
 
+	// Charge les données utilisateurs d'un utilisateur déjà existant.
 	function loadUser($login){
-		$cmd = "smbldap-userlist -g -u ".$login;
-		$output = exec($cmd);
+		$cmd = "/usr/sbin/smbldap-usershow ".$login;
+		$result = exec($cmd, $output, $return);
+		if($return != 0)
+			throw new Exception("Problème lors de la récupération des données utilisateurs.", 1);
+			
+		foreach ($output as $value) {
+			$value_explode = explode(": ", $value);
 
-		print($output);
+			switch ($value_explode[0]) {
+				case 'uid':
+					$this->login = $value_explode[1];
+					break;
+				
+				case 'sn':
+					$this->name = $value_explode[1];
+					break;
+
+				case 'givenName':
+					$this->login = $value_explode[1];
+					break;
+
+				case 'dn':
+					$dn = $value_explode[1];
+					$dn_explode = explode(",", $dn);
+					$ou = explode("=", $dn_explode[1]);
+					$this->ou = $ou[1];
+					break;
+			}
+		}
+		$this->set = true;
 	}
-
-	//A partir d'un utilisateur existant
-	/*function __construct($login) {
-
-	}*/
 
 	function genPassword() {
 		$vowels = "aeuy";
@@ -68,9 +90,9 @@ class Users {
 
 	function genLogin() {
 
-		/*if(!$set) {
-			throw new Exception("Utilisateur indéterminé.", 1);
-		}*/
+		if(!$this->set) {
+			throw new Exception("Données utilisateurs non initialisées.", 1);
+		}
 
 		// Pour supprimer quelqueq caractère indésirable dans les logins
 		$firstname 	= preg_replace('#(-| |\')#', '', $this->firstname);
@@ -84,36 +106,27 @@ class Users {
 
 	function createUser() {
 
-		/*if(!$set) {
-			throw new Exception("Utilisateur indéterminé.", 1);
-		}*/
+		if(!$this->set) {
+			throw new Exception("Données utilisateurs non initialisées.", 1);
+		}
 
-		$cmd = "sudo /root/script/ajouterUtilisateurs.php.py '"
+		$cmd = "sudo ./py/adduser.php.py '"
 			.$this->firstname."' '"
 			.$this->name."' '"
 			.$this->login."' '"
 			.$this->password."'";
-		
+
 		$output = exec($cmd);
 		
 		if($output!= "OK"){
 			throw new Exception($output, 1);
 		}
-
-		$this->log("Création utilisateur ".$this->firstname." ".$this->name." (".$this->login.")");
-	}
-
-	function changePassword($login){
-
-
-
-		$cmd = "sudo /usr/sbin/smbldap-passwd".$filtre;
 	}
 
 	function getUserList($filtre){
 		//Ajoute * devant et derrière.
 		$filtre = "*".$filtre."*";
-		$cmd = "sudo /usr/sbin/smbldap-userlist -g -u ".$filtre;
+		$cmd = "sudo smbldap-userlist -g -u ".$filtre;
 
 		exec($cmd, $output, $return);
 
@@ -132,18 +145,38 @@ class Users {
 			}
 		}
 
-		//TODO : Ajouter un filtre des résultats pour éviter de
-
 		return($results);
 	}
 
-	function log($string){
-		//Ajout de l'horodatage :
-		$string = date("D, d/M/Y H:i:s")." : ".$string."\n";
+	function passwd(){
 
-		file_put_contents($this->file, $string);
+		if(!$this->set) {
+			throw new Exception("Données utilisateurs non initialisées.", 1);
+		}
+
+		if($this->ou != "EXTERIEURS") {
+			if($this->ou == "SUPAGRO")
+				throw new Exception("Pas touche aux collègues. :/", 1);
+			else
+				throw new Exception("pas touche aux étudiants. :/", 1);	
+		}
+
+		$this->genPassword();
+
+		$cmd = "sudo ./py/passwd.php.py '"
+			.$this->login."' '"
+			.$this->password."'";
+
+		$output = exec($cmd, $out, $return);
+		echo "<pre>";
+		print_r($out);
+		echo "</pre>";
+		
+		if($output != "OK"){
+			throw new Exception($output, 1);
+		}
 	}
-	
+
 } // Fin Class User
 
 
