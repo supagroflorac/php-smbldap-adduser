@@ -53,6 +53,7 @@ class View {
 	}
 
 	function showError($error) {
+		$pageTitle = "Erreur";
 		include("php/views/header.phtml");
 		print($error);
 		include("php/views/footer.phtml");
@@ -69,11 +70,6 @@ class View {
 			$java = 'onClick="fill(\''.$login.'\')"';
 				
 			printf("<li $java>$login ($geco)</li>");
-
-
-			//print('<li onClick="fill("'.$list[$i][0].'")";>'.$list[$i][1].' ('.$list[$i][0].')</li>');
-
-			//<li ")";="" bredow="" onclick="fill(">Florestan BREDOW (bredow )</li>
 		}
 	}
 

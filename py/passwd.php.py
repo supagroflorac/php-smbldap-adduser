@@ -6,7 +6,7 @@
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See the COPYING file for more details.
 
-import sys,os
+import sys,os,subprocess
 
 #En entrée : login motdepasse
 
@@ -23,11 +23,18 @@ mdp = sys.argv[2]
 password = "'" + mdp + "\\n" + mdp + "'" # 2 fois demande + validation
 
 # Création de l'utilisateur
-retcode1 = os.system("echo -e " + password + " | smbldap-passwd " + login) # + " >> /var/log/changerMotDePasse.php.log")
+#print("echo -e " + password + " | smbldap-passwd " + login);
+#retcode1 = os.system("echo -e " + password + " | smbldap-passwd " + login) # + " >> /var/log/changerMotDePasse.php.log")
+
+pipe = subprocess.Popen("smbldap-passwd %s 2>/dev/null 1>&2" % login, stdin=subprocess.PIPE, shell=True)
+pipe.communicate("%s\n%s\n" % (mdp,mdp,))
+retcode1 = pipe.returncode
+
+retcode2 = os.system("smbldap-usermod --shadowMax -1 " + login )
 
 if retcode1 != 0:
 	print("Erreur lors du changement de mot de passe.");
-	sys.exit(1)
+	sys.exit(retcode1)
 
-print("OK")
+# Tout finis bien
 sys.exit(0)	

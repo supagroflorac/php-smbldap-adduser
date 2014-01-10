@@ -43,10 +43,12 @@ class Users {
 	// Charge les données utilisateurs d'un utilisateur déjà existant.
 	function loadUser($login){
 		$cmd = "/usr/sbin/smbldap-usershow ".$login;
-		$result = exec($cmd, $output, $return);
-		if($return != 0)
+		$output = array();
+		$return = exec($cmd, $output, $return_var);
+		if($return_var != 0){
 			throw new Exception("Problème lors de la récupération des données utilisateurs.", 1);
-			
+		}
+		
 		foreach ($output as $value) {
 			$value_explode = explode(": ", $value);
 
@@ -60,7 +62,7 @@ class Users {
 					break;
 
 				case 'givenName':
-					$this->login = $value_explode[1];
+					$this->firstname = $value_explode[1];
 					break;
 
 				case 'dn':
@@ -120,10 +122,15 @@ class Users {
 			.$this->login."' '"
 			.$this->password."'";
 
-		$output = exec($cmd);
+		$output = array();
+		$return = exec($cmd, $output, $return_var);
 		
-		if($output!= "OK"){
-			throw new Exception($output, 1);
+		if($return_var != 0){
+			$error = "";
+			foreach ($output as $line) {
+				$error .= $line."<br />";	
+			}			
+			throw new Exception($error, 1);
 		}
 	}
 
@@ -158,7 +165,7 @@ class Users {
 			throw new Exception("Données utilisateurs non initialisées.", 1);
 		}
 
-		if($this->ou != "EXTERIEURS") {
+		if($this->ou != "Exterieurs") {
 			if($this->ou == "SUPAGRO")
 				throw new Exception("Pas touche aux collègues. :/", 1);
 			else
@@ -171,13 +178,14 @@ class Users {
 			.$this->login."' '"
 			.$this->password."'";
 
-		$output = exec($cmd, $out, $return);
-		echo "<pre>";
-		print_r($out);
-		echo "</pre>";
-		
-		if($output != "OK"){
-			throw new Exception($output, 1);
+		$return = exec($cmd, $output, $return_var);
+				
+		if($return_var != "OK"){
+			$error = "";
+			foreach ($output as $line) {
+				$error .= $line."<br />";	
+			}			
+			throw new Exception($error, 1);
 		}
 	}
 

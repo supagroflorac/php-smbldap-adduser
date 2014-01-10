@@ -8,7 +8,6 @@ include("php/model.php");
 include("php/view.php");
 
 $user = new Users();
-
 $view = new View($user);
 
 

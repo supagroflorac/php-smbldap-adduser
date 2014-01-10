@@ -6,7 +6,7 @@
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See the COPYING file for more details.
 
-import sys,os
+import sys,os,subprocess
 
 #En entrée : prenom nom login motdepasse
 
@@ -31,7 +31,7 @@ acc_options += " -a"				# Est un utilisateur windows
 acc_options += " -c '" + nom + " " + prenom + "'"  
 		# Champs GECOS (nom et prénom de l'utilisateur)
 acc_options += " -o 'ou=EXTERIEURS'"		# Ajoute dans l'OU relative au l'OU utilisateurs
-acc_options += " -P"				# Demande le mdp a la fin
+#acc_options += " -P"				# Demande le mdp a la fin
 acc_options += " -A 0" 				# 0 ne peut changer son mdp ; 1 peut changer son MDP
 acc_options += " -B 0"				# Ne doit pas changer son mot de passe
 #acc_options += " --shadowMax -1"                # Le mot de passe n'expire jamais
@@ -53,8 +53,8 @@ retcode1 = os.system("echo -e " + password + " | smbldap-useradd" + acc_options 
 retcode2 = os.system("smbldap-usermod --shadowMax -1 " + login )
 
 if retcode1 != 0:
-	print("Problème création compte : Déjà existant ?");
+	print("Problème création compte : Déjà existant ?")
 	sys.exit(1)
 
-print("OK")
+# Tout va bien, on a finis.
 sys.exit(0)	

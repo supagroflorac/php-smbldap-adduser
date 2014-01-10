@@ -12,13 +12,13 @@
 				<div class="control-group">
 					<label class="control-label" for="firstname" placeholder="Prénom">Prénom</label>
 					<div class="controls">
-						<input id="firstname" name="firstname" required type="text" value="<?php print($firstName); ?>" />
+						<input id="firstname" name="firstname" required type="text" value="<?php if (isset($firstName)) print($firstName); ?>" />
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for="name" placeholder="Nom">Nom</label>
 					<div class="controls">
-						<input id="name" name="name" required type="text" value="<?php print($name); ?>" />
+						<input id="name" name="name" required type="text" value="<?php if (isset($name))print($name); ?>" />
 					</div>
 				</div>
 				<div class="control-group">
