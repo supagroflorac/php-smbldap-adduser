@@ -61,7 +61,6 @@ switch ($_GET['action']) {
 		$view->showAccount();
 
 		break;
-
 	
 	// Affiche le formulaire de creation de compte
 	default:

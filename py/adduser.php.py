@@ -10,7 +10,7 @@ import sys,os,subprocess
 
 #En entrée : prenom nom login motdepasse
 
-if len(sys.argv) != 5:
+if len(sys.argv) != 6:
 	# Manque d'arguments : on sort.
 	print("Mauvais nombre d'arguments");
 	sys.exit(1)
@@ -19,6 +19,7 @@ prenom = sys.argv[1]
 nom = sys.argv[2]
 login = sys.argv[3]
 mdp = sys.argv[4]
+uid = sys.argv[5]
 
 loc_path = "/home/"+login
 smb_path = "\\\\serveur\\"+login
@@ -28,7 +29,8 @@ prf_path = "\\\\serveur\\Profiles$\\"+login
 acc_options =  " -d '" + loc_path + "' -m"	# Repertoire home et création
 acc_options += " -n" 				# Pas de groupe au nom de l'utilisateur
 acc_options += " -a"				# Est un utilisateur windows
-acc_options += " -c '" + nom + " " + prenom + "'"  
+acc_options += " -c '" + nom + " " + prenom + "'"
+acc_options += " -u " + uid  
 		# Champs GECOS (nom et prénom de l'utilisateur)
 acc_options += " -o 'ou=EXTERIEURS'"		# Ajoute dans l'OU relative au l'OU utilisateurs
 #acc_options += " -P"				# Demande le mdp a la fin

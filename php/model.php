@@ -12,7 +12,10 @@ class Users {
 	public $password;
 	public $login;
 	public $ou;
+	public $uid;
 	public $set; //determine si l'utilisateur est completement initialisé
+	private $uid_min = 50000;
+	private $uid_max = 60000;
 	
 	/************************************************************************
 	 * Constructeur
@@ -30,6 +33,8 @@ class Users {
 		$this->name = rmAccents($name);
 		$this->firstname = rmAccents($firstname);
 		$this->ou = "EXTERIEURS "; // Inutile pour eviter de laisser une variable vide.
+
+		$this->uid = $this->getNextUID();
 
 		$this->set = true;
 
@@ -120,13 +125,14 @@ class Users {
 			.$this->firstname."' '"
 			.$this->name."' '"
 			.$this->login."' '"
-			.$this->password."'";
+			.$this->password."' "
+			.$this->uid;
 
 		$output = array();
 		$return = exec($cmd, $output, $return_var);
 		
 		if($return_var != 0){
-			$error = "";
+			$error = $cmd;
 			foreach ($output as $line) {
 				$error .= $line."<br />";	
 			}			
@@ -187,6 +193,35 @@ class Users {
 			}			
 			throw new Exception($error, 1);
 		}
+	}
+
+	private function getNextUID(){
+		$nextUID = $this->uid_min;
+
+		// Récupere la list des Utilisateurs
+		$cmd = "sudo smbldap-userlist -u";
+		exec($cmd, $output, $return);
+
+		$listUID = array();
+
+		foreach ($output as $line) {
+			$chunks = explode("|", $line);
+
+			if( $chunks[0] <= $this->uid_max 
+				&& $chunks[0] >= $this->uid_min)
+					array_push($listUID, $chunks[0]);
+		}
+
+		while ($nextUID < $this->uid_max){
+			if(!in_array($nextUID, $listUID)){
+				$this->uid = $nextUID;
+				return $nextUID;
+			}
+
+			$nextUID++;
+		}
+
+		throw new Exception("Plus d'UID disponnibles", 1);	
 	}
 
 } // Fin Class User
