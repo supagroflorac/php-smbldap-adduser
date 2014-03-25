@@ -22,10 +22,6 @@ mdp = sys.argv[2]
 # On prepare le mot de passe pour la saisie automatique
 password = "'" + mdp + "\\n" + mdp + "'" # 2 fois demande + validation
 
-# Création de l'utilisateur
-#print("echo -e " + password + " | smbldap-passwd " + login);
-#retcode1 = os.system("echo -e " + password + " | smbldap-passwd " + login) # + " >> /var/log/changerMotDePasse.php.log")
-
 pipe = subprocess.Popen("smbldap-passwd %s 2>/dev/null 1>&2" % login, stdin=subprocess.PIPE, shell=True)
 pipe.communicate("%s\n%s\n" % (mdp,mdp,))
 retcode1 = pipe.returncode

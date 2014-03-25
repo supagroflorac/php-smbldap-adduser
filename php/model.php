@@ -132,9 +132,8 @@ class Users {
 		$return = exec($cmd, $output, $return_var);
 		
 		if($return_var != 0){
-			$error = $cmd;
 			foreach ($output as $line) {
-				$error .= $line."<br />";	
+				$error = $line."<br />";	
 			}			
 			throw new Exception($error, 1);
 		}

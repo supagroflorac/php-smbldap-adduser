@@ -21,7 +21,7 @@ login = sys.argv[3]
 mdp = sys.argv[4]
 uid = sys.argv[5]
 
-loc_path = "/home/"+login
+loc_path = "/home/"+login[:1]+"/"+login
 smb_path = "\\\\serveur\\"+login
 prf_path = "\\\\serveur\\Profiles$\\"+login
 
@@ -32,7 +32,7 @@ acc_options += " -a"				# Est un utilisateur windows
 acc_options += " -c '" + nom + " " + prenom + "'"
 acc_options += " -u " + uid  
 		# Champs GECOS (nom et prénom de l'utilisateur)
-acc_options += " -o 'ou=EXTERIEURS'"		# Ajoute dans l'OU relative au l'OU utilisateurs
+#acc_options += " -o 'ou=EXTERIEURS'"		# Ajoute dans l'OU relative au l'OU utilisateurs
 #acc_options += " -P"				# Demande le mdp a la fin
 acc_options += " -A 0" 				# 0 ne peut changer son mdp ; 1 peut changer son MDP
 acc_options += " -B 0"				# Ne doit pas changer son mot de passe
